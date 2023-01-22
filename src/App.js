@@ -4,47 +4,47 @@ import './App.css';
 function App() {
 
   let json = [
-    // {
-    //   "id": 149,
-    //   "full_name": "Shilpa Dafda",
-    //   "email": "shilpa.d@samcomtechnobrains.com",
-    //   "vendor": {
-    //     "Maharastra": {
-    //       "Mumbai": [
-    //         {
-    //           "vendor_id": 34,
-    //           "vendor__user__company__name": "Ceramic Studio",
-    //           "vendor__user__company__state__name": "Maharastra",
-    //           "vendor__user__company__state__id": 2,
-    //           "vendor__user__company__city__id": 2,
-    //           "vendor__user__company__city__name": "Mumbai",
-    //           "targets": [],
-    //           "totalQuantity": 0
-    //         }
-    //       ]
-    //     },
-    //     "Punjab": {
-    //       "Ludhiana": [
-    //         {
-    //           "vendor_id": 35,
-    //           "vendor__user__company__name": "Ved Steel Impex",
-    //           "vendor__user__company__state__name": "Punjab",
-    //           "vendor__user__company__state__id": 6,
-    //           "vendor__user__company__city__id": 9,
-    //           "vendor__user__company__city__name": "Ludhiana",
-    //           "targets": [],
-    //           "totalQuantity": 0
-    //         }
-    //       ]
-    //     }
-    //   }
-    // },
-    // {
-    //   "id": 148,
-    //   "full_name": "Dhaval Varmora",
-    //   "email": "manishpatel199820@gmail.com",
-    //   "vendor": {}
-    // },
+    {
+      "id": 149,
+      "full_name": "Shilpa Dafda",
+      "email": "shilpa.d@samcomtechnobrains.com",
+      "vendor": {
+        "Maharastra": {
+          "Mumbai": [
+            {
+              "vendor_id": 34,
+              "vendor__user__company__name": "Ceramic Studio",
+              "vendor__user__company__state__name": "Maharastra",
+              "vendor__user__company__state__id": 2,
+              "vendor__user__company__city__id": 2,
+              "vendor__user__company__city__name": "Mumbai",
+              "targets": [],
+              "totalQuantity": 0
+            }
+          ]
+        },
+        "Punjab": {
+          "Ludhiana": [
+            {
+              "vendor_id": 35,
+              "vendor__user__company__name": "Ved Steel Impex",
+              "vendor__user__company__state__name": "Punjab",
+              "vendor__user__company__state__id": 6,
+              "vendor__user__company__city__id": 9,
+              "vendor__user__company__city__name": "Ludhiana",
+              "targets": [],
+              "totalQuantity": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": 148,
+      "full_name": "Dhaval Varmora",
+      "email": "manishpatel199820@gmail.com",
+      "vendor": {}
+    },
     {
       "id": 118,
       "full_name": "Manish Varmora",
@@ -279,72 +279,49 @@ function App() {
         for (let k = 0; k < vendorCityKeys.length; k++) {
           let targetKeys=Object.keys(vendorCityValues[k])
           let targetValues=Object.values(vendorCityValues[k])
-          // console.log(targetValues,"vendors")
-          // temp.push({id:vendors})
-          let temp=[];
+          let cityWiseVendorTotal=[];
           for (let l = 0; l < targetKeys.length; l++) {
             
             console.log(targetValues[l],"vendors")
             
             let targetsData=targetValues[l].targets
             for (let t = 0; t < targetsData.length; t++) {
-              temp.push({brand_id:targetsData[t].brand_id,achived:0})
-              for (let d = 0; d < temp.length; d++) {
-                console.log(temp[d].achived,"achived00",temp[d].brand_id===targetsData[t].brand_id,temp[d].brand_id,"====",targetsData[t].brand_id,"targetsData[t].brand_id---------")
-              if(temp[d].brand_id===targetsData[t].brand_id){
-                temp[d].achived=temp[d].achived+targetsData[t].achived
-              }
-              
-              }
+              cityWiseVendorTotal.push({brand_id:targetsData[t].brand_id,qty:targetsData[t].qty,achived:targetsData[t].achived})
           }
       }
-      
-    //  let finalData = await sumData(temp)
-    //  console.log(finalData,"finalData finalData",temp.length)
-    let tempData=temp.reduce((acc, item) => {
-      let existItem = acc.find(({brand_id}) => item.brand_id === brand_id);
-     console.log(existItem,"existItem")
-      if(existItem) {
-        console.log(existItem,item.achived,"item achived ********************")
-        existItem.achived += item.achived;
-      } else {
-        acc.push(item);
+    
+      cityVendors.push({id:vendorCityKeys[k],vendors:vendorCityValues[k],total: getTotalOfArray(cityWiseVendorTotal)})
       }
-      console.log(acc,"accaccaccacc")
-      return acc;
-    },[]);
-      cityVendors.push({id:vendorCityKeys[k],vendors:vendorCityValues[k],total:tempData})
+      let totalCityVendorData=[];
+      for (let cv = 0; cv < cityVendors.length; cv++) {
+        let totalCityVendor=cityVendors[cv].total
+      for (let tcv = 0; tcv < totalCityVendor.length; tcv++) {
+        totalCityVendorData.push({brand_id:totalCityVendor[tcv].brand_id,qty:totalCityVendor[tcv].qty,achived:totalCityVendor[tcv].achived})
       }
-        dataArray.push({id:vendorKeys[j],city:cityVendors,total:["will work"]})
+      }
+        dataArray.push({id:vendorKeys[j],city:cityVendors,total: getTotalOfArray(totalCityVendorData)})
       }
       data[i].dataArray=dataArray
       finalData.push(data[i])
     }
 
-    return console.log(finalData,"FINALLL")
+    return finalData;
   }
-
+console.log(setData())
   // useEffect(()=>{
   // },[])
   
-  
-  function sumData(arrayData){
-    console.log(arrayData.length,'START0000000000000000000000')
-   return arrayData.reduce((acc, item) => {
-      let existItem = acc.find(({brand_id}) => item.brand_id === brand_id);
-     console.log(existItem,"existItem")
-      if(existItem) {
-        console.log(item.achived,"item achived ")
-        existItem.achived += item.achived;
-      } else {
-        acc.push(item);
-      }
-      console.log(acc,"accaccaccacc")
-      return acc;
-    },[]);
-  }
-  console.log(setData(),"Function call");
-
+  function getTotalOfArray(array){
+  return array.reduce((acc, item) => {
+    let existItem = acc.find(({brand_id}) => item.brand_id === brand_id);
+    if(existItem) {
+      existItem.achived += item.achived;
+      existItem.qty += item.qty;
+    } else {
+      acc.push(item);
+    }
+    return acc;
+  },[]);}
   return (
     <div className="App">
       <header className="App-header">
